@@ -15,7 +15,7 @@ class TurnipScraper:
     def __init__(self, verbose, timeinterval, price, queue):
         self.verbose = verbose
         self.API_URL = "https://api.turnip.exchange"
-        self.timeinterval = timeinterval
+        self.timeinterval = int(timeinterval)
         self.price = price
         self.queue = queue
 
