@@ -4,6 +4,7 @@ import threading
 import sys
 import argparse
 import time
+import json
 from playsound import playsound
 
 
@@ -53,7 +54,6 @@ class TurnipScraper:
         turnipcodes[turnipcodedict["turnipCode"]]['creationTime'] = turnipcodedict["creationTime"]
 
     def Alert(self, turnipcode):
-        playsound('SFX.mp3')
         print("\n[!!!] TURNIP ALERT: TURNIP PRICE AND QUEUE HAVE MET YOUR CRITERIA [!!!]")
         print("Island Name:\t\t%s" % turnipcodes[turnipcode]["name"])
         print("Price:\t\t\t%s bells" % turnipcodes[turnipcode]["turnipPrice"])
@@ -61,6 +61,7 @@ class TurnipScraper:
         print("Description:\t\t%s" % turnipcodes[turnipcode]["description"])
         print("Copy and paste the following link to your browser and join the queue:")
         print("\nhttps://turnip.exchange/island/%s\n\n" % turnipcode)
+        playsound('SFX.mp3')
 
     def CriteriaCheck(self, turnipcode):
         if turnipcodes[turnipcode]["turnipPrice"] >= int(self.price) and turnipcodes[turnipcode]["queued"] <= int(self.queue):
@@ -70,8 +71,17 @@ class TurnipScraper:
 
     def NookCrook(self):
         try:
+            result = None
             response = requests.get(self.API_URL + "/islands")
-            result = response.json()
+            try:
+                result = response.json()
+            except json.decoder.JSONDecodeError:
+                print("[X] Island API call returned nothing, you may need to set your time interval higher")
+                result = None
+                
+            if result = None:
+                return
+            
             if 'islands' in result.keys():
                 for islanddictionary in result["islands"]:
                     islanddictionary = islanddictionary
@@ -85,7 +95,7 @@ class TurnipScraper:
                             if self.CriteriaCheck(islanddictionary["turnipCode"]):
                                 self.Alert(islanddictionary["turnipCode"])
         except requests.ConnectionError:
-            print("Islands pull failed")
+            print("[X] Islands pull failed, you may need to set your time interval higher")
             pass
 
     def STALNKS(self):
@@ -104,7 +114,7 @@ class Main:
         parser.add_argument('-s', '--proxy', default=False, help='Specify SOCKS5 proxy (i.e. 127.0.0.1:8123)')
         parser.add_argument('-v', '--verbose', default=False, action='store_true',
                             help='Output in verbose mode while script runs')
-        parser.add_argument('-t', '--timeinterval', default=30, help='Time interval to check server in seconds')
+        parser.add_argument('-t', '--timeinterval', default=60, help='Time interval to check server in seconds')
         parser.add_argument('-p', '--price', default=300, help='Price to alert on if island price is greater than')
         parser.add_argument('-q', '--queue', default=100, help='Queue to alert on if island queue is less than')
 
