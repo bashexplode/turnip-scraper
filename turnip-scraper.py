@@ -79,7 +79,7 @@ class TurnipScraper:
                 print("[X] Island API call returned nothing, you may need to set your time interval higher")
                 result = None
                 
-            if result = None:
+            if result is None:
                 return
             
             if 'islands' in result.keys():
