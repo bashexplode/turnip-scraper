@@ -1,3 +1,5 @@
+THIS SCRIPT IS NOW DEPRECATED. TURNIP EXCHANGE ADDED BOT DEFENSE SERVICES WHICH PREVENT THE AUTOMATED API PULLS USED IN THIS SCRIPT. SORRY FOR THE INCONVENIENCE. Send me a message if you have any workarounds.
+
 Animal Crossing: New Horizons Turnip Exchange Alert Service
 
 Allows you to set criteria for islands that pop up on the Turnip Exchange, if the price goes over and certain threshold
