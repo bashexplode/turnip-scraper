@@ -64,7 +64,7 @@ class TurnipScraper:
         playsound('SFX.mp3')
 
     def CriteriaCheck(self, turnipcode):
-        if turnipcodes[turnipcode]["turnipPrice"] >= int(self.price) and turnipcodes[turnipcode]["queued"] <= int(self.queue):
+        if turnipcodes[turnipcode]["turnipPrice"] >= int(self.price) and int(turnipcodes[turnipcode]["queued"][:turnipcodes[turnipcode]["queued"].find('/')]) <= int(self.queue):
             return True
         else:
             return False
@@ -72,7 +72,9 @@ class TurnipScraper:
     def NookCrook(self):
         try:
             result = None
-            response = requests.get(self.API_URL + "/islands")
+            headers = {"accept": "application/json", "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
+            payload = '{"islander": "neither", "category": "turnips"}'
+            response = requests.post(self.API_URL + "/islands", headers=headers, data=payload)
             try:
                 result = response.json()
             except json.decoder.JSONDecodeError:
